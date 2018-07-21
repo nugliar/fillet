@@ -6,13 +6,13 @@
 #    By: rsharipo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/28 09:51:19 by rsharipo          #+#    #+#              #
-#    Updated: 2018/07/18 17:09:05 by rsharipo         ###   ########.fr        #
+#    Updated: 2018/07/19 19:25:36 by rsharipo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fillit
 
-SRC = main.c ft_board.c ft_sq_rt.c ft_filler.c ft_stack.c ft_isvalid.c
+SRC = main.c ft_solver.c ft_sq_rt.c ft_filler.c ft_stack.c ft_isvalid.c
 
 OBJ = $(SRC:.c=.o)
 

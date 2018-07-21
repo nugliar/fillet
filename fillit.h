@@ -6,7 +6,7 @@
 /*   By: rsharipo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/15 09:19:36 by rsharipo          #+#    #+#             */
-/*   Updated: 2018/07/18 17:00:55 by rsharipo         ###   ########.fr       */
+/*   Updated: 2018/07/21 15:05:59 by rsharipo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct		s_list
 	int				num;
 	char			*board;
 	char			**input;
+	t_stack			*elem;
 }					t_list;
 
 void				*ft_memset(char *b, int c, size_t len);
@@ -38,18 +39,18 @@ size_t				ft_strlen(void const *s);
 void				ft_putstr(void const *s);
 void				ft_putendl(void const *s);
 int					ft_isvalid(int fd, char *buf);
-char				*ft_filler(char **input, int num);
+char				*ft_filler(t_list *data, char **input, int num);
 int					sq_rt(int nb);
-void				fill_board(t_list *data);
+void				create_board(t_list *data);
 void				calc_shift(char *tet, t_stack *elem);
-int					change_board(char *board, int *change, char c);
-int					push_to_board(t_list *data, t_stack *elem, char x);
+int					change_board(char *board, int *change, int c);
+int					push_to_board(t_list *data, t_stack *elem, int x, int shift);
 t_stack				*add_elem(t_stack *elem, int name);
 void				pop_elem(t_stack **elem);
-int					check_elem(t_stack *elem, int name);
-void				erase_from_board(char *board, int *change);
+int					check_elem(t_list *data, t_stack *elem, int name);
+void				erase_from_board(t_list *data, t_stack *elem);
 int					stack_len(t_stack *elem);
-int					ft_solver(t_list *data, t_stack *elem);
-char				*ft_filler(char **input, int num);
+int					solver(t_list *data, t_stack *elem, int size, int pos);
+void				print_board(char *board, int size);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rsharipo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/14 20:25:14 by rsharipo          #+#    #+#             */
-/*   Updated: 2018/07/18 16:57:36 by rsharipo         ###   ########.fr       */
+/*   Updated: 2018/07/20 10:29:39 by rsharipo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,19 @@
 #include <stdlib.h>
 #define BUF_SIZE	21
 
-void	print_board(char *board)
+void	print_board(char *board, int size)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	j = 0;
-	while (board[i * 51] != '*')
+	while (board[i] != 0)
 	{
-		while (board[i * 51 + j] != '*')
-			write(1, (board + i * 51 + j++), 1);
-		write(1, "\n", 1);
-		j = 0;
+		if (i != 0 && i % size == 0)
+			write(1, "\n", 1);
+		write(1, (board + i), 1);
 		i++;
 	}
+	write(1, "\n", 1);
 }
 
 char	**get_input(char *file, int fd, char *buf, int num)
@@ -67,23 +65,27 @@ int		main(int ac, char **av)
 {
 	int		fd;
 	int		num;
+	t_list	*data;
 	char	**input;
 	char	buf[BUF_SIZE + 1];
 
 	num = 0;
+	data = NULL;
 	if (ac != 2)
 	{
-		ft_putendl("Usage");
+		ft_putendl("usage: fillit input_file");
 		return (0);
 	}
 	else if ((fd = open(av[1], O_RDONLY)) == -1)
-		ft_putendl("File open error");
+		ft_putendl("error");
 	else if (!(num = ft_isvalid(fd, buf)))
-		ft_putendl("Invalid input");
+		ft_putendl("error");
+	else if (!(data = (t_list *)malloc(sizeof(*data))))
+		ft_putendl("error");
 	else
 	{
 		input = get_input(av[1], fd, buf, num);
-		print_board(ft_filler(input, num));
+		print_board(ft_filler(data, input, num), data->size);
 	}
 	return (0);
 }

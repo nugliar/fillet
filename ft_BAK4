@@ -6,14 +6,13 @@
 /*   By: rsharipo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/15 14:20:38 by rsharipo          #+#    #+#             */
-/*   Updated: 2018/07/21 15:29:18 by rsharipo         ###   ########.fr       */
+/*   Updated: 2018/07/20 17:15:32 by rsharipo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 
 void	calc_shift(char *tet, t_stack *elem)
 {
@@ -41,56 +40,34 @@ void	calc_shift(char *tet, t_stack *elem)
 		*(elem->shift + i) = *(elem->shift + i) - min;
 }
 
-int		scan_map(t_list *data, t_stack *elem, int index, int pos)
+int		ft_solver(t_list *data, t_stack *elem, int size)
 {
-	while (pos < data->size * data->size)
+	int	i;
+	int	pos;
+
+	i = 0;
+	pos = 0;
+	while (pos < size)
 	{
-		if ((data->board)[pos] == '.' && solver(data, elem, index, pos))
+		i = 0;
+		while (i < data->num && !check_elem(elem, i))
+			i++;
+		if (i == data->num)
 			return (1);
-		pos++;
-	}
-	return (0);
-}
-
-int		solver(t_list *data, t_stack *elem, int index, int pos)
-{
-	int	z;
-
-	z = 0;
-	if (stack_len(elem) == data->num)
-		return (1);
-	//printf("[pos: %d] [%c]", pos, index + 'A');
-	if (!check_elem(data, elem, index))
-	{
-//		printf("...skipping %c\n", index + 'A');
-		return (0);
-	}
-	if (index >= data->num)
-		return (0);
-	elem = add_elem(elem, index);
-	if (push_to_board(data, elem, index, pos))
-	{
-		while (z++ + 1 < data->num)
+		elem = add_elem(elem, i);
+		if (push_to_board(data, elem, i, pos))
 		{
-			if (scan_map(data, elem, (index++ + 1) % data->num, 0))
+			if (ft_solver(data, elem, size))
 				return (1);
-//			printf("\n");
-//			usleep(500000);
+			else
+			{
+				erase_from_board(data, elem, i, pos);
+				pop_elem(&elem);
+			}
 		}
-		erase_from_board(data, elem);
-	}
-	pop_elem(&elem);
-	return (0);
-}
-
-int		init_comb(t_list *data, t_stack *elem, int index)
-{
-	while (index < data->num)
-	{
-		printf("...init %c\n", index + 'A');
-		if (scan_map(data, elem, index++, 0))
-			return (1);
-//		printf("\n");
+		else
+			pop_elem(&elem);
+		pos++;
 	}
 	return (0);
 }
@@ -108,14 +85,13 @@ char	*ft_filler(t_list *data, char **input, int num)
 	create_board(data);
 	if (!data->board)
 		return ("error");
-	while (!init_comb(data, elem, 0))
+	while (!ft_solver(data, elem, data->size * data->size))
 	{
 		data->size = data->size + 1;
-		printf("\n...increasing size of map to %d\n\n", data->size);
+		printf("...increasing size to %d\n", data->size);
 		create_board(data);
 		if (!(data->board))
 			return ("error");
 	}
-	printf("\n...[SOLVED]\n\n");
 	return (data->board);
 }
